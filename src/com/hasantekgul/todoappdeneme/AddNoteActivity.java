@@ -6,14 +6,15 @@ import com.hasantekgul.todoappdeneme.helper.DatabaseHelper;
 import com.hasantekgul.todoappdeneme.model.Folder;
 import com.hasantekgul.todoappdeneme.model.Note;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 
 public class AddNoteActivity extends Activity {
@@ -30,6 +31,10 @@ public class AddNoteActivity extends Activity {
 		setupActionBar();
 		text = (EditText) findViewById(R.id.editText1);
 		db = new DatabaseHelper(getApplicationContext());
+
+		ActionBar actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_custom_bg));
+		
 	}	
 
 	/**
@@ -42,31 +47,31 @@ public class AddNoteActivity extends Activity {
 	}	
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.add_note, menu);
+		return true;
+	}
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+			
+		case R.id.action_save:
+			saveNote();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void saveNote(View view) {
+	public void saveNote() {
 		Folder folder = db.getFolderByName("Genel");
 		note  = new Note(text.getText().toString(), 0);
 		db.createNote(note, null, new long[]{folder.getId()});
-		
-		List<Folder> allFolders = db.getAllFolders();
-		
-		for(Folder f : allFolders) {
-			Log.e("Klasör: ", f.getFolderName());
-		}
-		
-		List<Note> allNotes = db.getAllNotes();
-		for(Note n : allNotes) {
-			Log.e("Notlar: ", n.getNote());
-		}
 		
 		this.finish();
 	}

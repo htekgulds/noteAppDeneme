@@ -3,31 +3,29 @@ package com.hasantekgul.todoappdeneme;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hasantekgul.todoappdeneme.adapter.CustomListAdapter;
 import com.hasantekgul.todoappdeneme.helper.DatabaseHelper;
+import com.hasantekgul.todoappdeneme.model.CustomList;
 import com.hasantekgul.todoappdeneme.model.Folder;
-import com.hasantekgul.todoappdeneme.model.Note;
 
 import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	private static final String IS_FIRST_TIME = "is_first_time";
 	private static final String APP_PREFS = "app_preferences";
+	private static final String IS_FIRST_TIME = "is_first_time";
 	protected static final String FOLDER_NAME = "folder_name";
 	
 	DatabaseHelper db;	
@@ -36,7 +34,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_custom_list);
+		
+		ActionBar actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_custom_bg));
 		
 		db = new DatabaseHelper(getApplicationContext());
 		
@@ -54,24 +55,17 @@ public class MainActivity extends Activity {
 		}
 		
 		List<Folder> folders = db.getAllFolders();
+		final List<CustomList> folderList = new ArrayList<CustomList>();
+		
 		for(Folder folder : folders) {
-			Log.e("Klasörler: ", folder.getFolderName());
-		}		
-
-		List<Note> notes = db.getAllNotes();
-		for(Note note : notes) {
-			Log.e("Notlar: ", note.getNote());
+			CustomList listItem = new CustomList("Klasör", folder.getFolderName());
+			folderList.add(listItem);
 		}
 		
 		db.close();
 		
-		final List<String> folderNames = new ArrayList<String>();
-		for(Folder folder : folders) {
-			String folderName = folder.getFolderName();
-			folderNames.add(folderName);
-		}
 		ListView list = (ListView) findViewById(R.id.list);
-		CustomListAdapter adapter = new CustomListAdapter (getApplicationContext(), folderNames);
+		CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), folderList);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -80,7 +74,7 @@ public class MainActivity extends Activity {
 		          int position, long id) {
 		    	  
 		    	  Intent notesPage = new Intent(getApplicationContext(), NotesActivity.class);
-		    	  notesPage.putExtra(FOLDER_NAME, (String)parent.getItemAtPosition(position));
+		    	  notesPage.putExtra(FOLDER_NAME, folderList.get(position).getText());
 		    	  startActivity(notesPage);
 		      }
 		});
@@ -108,33 +102,6 @@ public class MainActivity extends Activity {
 		}
 		
 		return super.onOptionsItemSelected(item);
-	}
-	
-	
-	public class CustomListAdapter extends ArrayAdapter<String> {
-		private final Context context;
-		private final List<String> values;
-		
-		public CustomListAdapter(Context context, List<String> values) {
-			super(context, R.layout.custom_list_row, values);
-			this.context = context;
-			this.values = values;
-		}
-		
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(R.layout.custom_list_row, parent, false);
-			TextView title = (TextView) rowView.findViewById(R.id.title);
-			TextView text = (TextView) rowView.findViewById(R.id.text);
-			
-			title.setText("Klasör");
-			text.setText(values.get(position));
-			
-			return rowView;
-		}
-		
 	}
 
 }

@@ -8,27 +8,17 @@
         android:id="@+id/editText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:ems="10"
 		android:gravity="start"
         android:singleLine="false"
-        android:hint="Not yazmaya başla..."
+        android:hint="@string/hint_add_note"
         android:textColor="#333333"
         android:background="@android:color/transparent" >
 
         <requestFocus />
     </EditText>
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Kaydet"
-        android:onClick="saveNote"/>
 
 </RelativeLayout>

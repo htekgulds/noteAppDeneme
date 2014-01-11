@@ -3,25 +3,19 @@ package com.hasantekgul.todoappdeneme;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hasantekgul.todoappdeneme.MainActivity.CustomListAdapter;
-import com.hasantekgul.todoappdeneme.helper.DatabaseHelper;
-import com.hasantekgul.todoappdeneme.model.Folder;
-import com.hasantekgul.todoappdeneme.model.Note;
-
-import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.support.v4.app.NavUtils;
+
+import com.hasantekgul.todoappdeneme.adapter.CustomListAdapter;
+import com.hasantekgul.todoappdeneme.helper.DatabaseHelper;
+import com.hasantekgul.todoappdeneme.model.CustomList;
+import com.hasantekgul.todoappdeneme.model.Note;
 
 public class NotesActivity extends Activity {
 
@@ -30,35 +24,43 @@ public class NotesActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_custom_list);
 		// Show the Up button in the action bar.
 		setupActionBar();
 
+		ActionBar actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_custom_bg));
+		
+		makeList();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		makeList();
+	}
+	
+	public void makeList() {
 		db = new DatabaseHelper(getApplicationContext());
 		Intent notesPage = getIntent();
 		
-
 		List<Note> notes = db.getAllNotesByFolder(notesPage.getStringExtra(MainActivity.FOLDER_NAME));
+		List<CustomList> noteList = new ArrayList<CustomList>();
+		
 		for(Note note : notes) {
-			Log.e("Notlar: ", note.getNote());
+			CustomList listItem = new CustomList("Not", note.getNote());
+			noteList.add(listItem);
 		}
 		
 		db.close();
 		
-		List<String> noteTexts = new ArrayList<String>();
-		for(Note note : notes) {
-			String noteText = note.getNote();
-			noteTexts.add(noteText);
-		}
 		ListView list = (ListView) findViewById(R.id.list);
-		CustomListAdapter adapter = new CustomListAdapter (getApplicationContext(), noteTexts);
+		CustomListAdapter adapter = new CustomListAdapter (getApplicationContext(), noteList);
 		list.setAdapter(adapter);
 		
 	}
 
-	/**
-	 * Set up the {@link android.app.ActionBar}.
-	 */
 	private void setupActionBar() {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -78,35 +80,14 @@ public class NotesActivity extends Activity {
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+			
+		case R.id.action_add_note:
+			Intent intentAddNote = new Intent(getApplicationContext(), AddNoteActivity.class);
+			startActivity(intentAddNote);
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	
-	public class CustomListAdapter extends ArrayAdapter<String> {
-		private final Context context;
-		private final List<String> values;
-		
-		public CustomListAdapter(Context context, List<String> values) {
-			super(context, R.layout.custom_list_row, values);
-			this.context = context;
-			this.values = values;
-		}
-		
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(R.layout.custom_list_row, parent, false);
-			TextView title = (TextView) rowView.findViewById(R.id.title);
-			TextView text = (TextView) rowView.findViewById(R.id.text);
-			
-			title.setText("Not");
-			text.setText(values.get(position));
-			
-			return rowView;
-		}
-		
-	}
 
 }

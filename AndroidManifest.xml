@@ -24,7 +24,7 @@
         </activity>
         <activity
             android:name="com.hasantekgul.todoappdeneme.AddNoteActivity"
-            android:label="@string/title_activity_add_note_activity"
+            android:label="@string/title_activity_add_note"
             android:parentActivityName="com.hasantekgul.todoappdeneme.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
