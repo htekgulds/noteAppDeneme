@@ -13,6 +13,21 @@
     <string name="title_activity_notes">Notlar</string>
     
     <!-- Views -->
-    <string name="hint_add_note">Notunu buraya yaz</string> 
+    <string name="hint_add_note">Notunu buraya yaz</string>
+    
+    <!-- Drawer items -->
+    <string-array name="drawer_list_items">
+        <item >Tüm notlarım</item>
+        <item >Klasörler</item>
+    </string-array>
+    
+    <array name="drawer_list_icons">
+        <item >@drawable/note_icon</item>
+        <item >@drawable/folder_icon</item>
+    </array>
+    
+    <string name="drawer_list_icon_desc">Item icon</string>
+    
+    
 
 </resources>
