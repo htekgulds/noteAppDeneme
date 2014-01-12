@@ -45,7 +45,7 @@ public class NotesActivity extends Activity {
 		db = new DatabaseHelper(getApplicationContext());
 		Intent notesPage = getIntent();
 		
-		List<Note> notes = db.getAllNotesByFolder(notesPage.getStringExtra(MainActivity.FOLDER_NAME));
+		List<Note> notes = db.getAllNotesByFolder(notesPage.getStringExtra(FoldersFragment.FOLDER_NAME));
 		List<CustomList> noteList = new ArrayList<CustomList>();
 		
 		for(Note note : notes) {

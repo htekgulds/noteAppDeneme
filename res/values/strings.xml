@@ -13,6 +13,11 @@
     <string name="title_activity_notes">Notlar</string>
     
     <!-- Views -->
-    <string name="hint_add_note">Notunu buraya yaz</string> 
+    <string name="hint_add_note">Notunu buraya yaz</string>
+
+    <string name="button_search">Ara</string>
+    <string name="hint_search">Ara...</string>
+    
+    
 
 </resources>

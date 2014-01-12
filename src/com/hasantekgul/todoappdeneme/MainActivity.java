@@ -1,44 +1,41 @@
 package com.hasantekgul.todoappdeneme;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.hasantekgul.todoappdeneme.adapter.CustomListAdapter;
-import com.hasantekgul.todoappdeneme.helper.DatabaseHelper;
-import com.hasantekgul.todoappdeneme.model.CustomList;
-import com.hasantekgul.todoappdeneme.model.Folder;
-
-import android.os.Bundle;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-public class MainActivity extends Activity {
+import com.hasantekgul.todoappdeneme.helper.DatabaseHelper;
+import com.hasantekgul.todoappdeneme.model.CustomList;
+import com.hasantekgul.todoappdeneme.model.Folder;
+
+public class MainActivity extends FragmentActivity {
 
 	private static final String APP_PREFS = "app_preferences";
 	private static final String IS_FIRST_TIME = "is_first_time";
 	protected static final String FOLDER_NAME = "folder_name";
-	
+
 	DatabaseHelper db;	
 	SharedPreferences pref;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_custom_list);
-		
-		ActionBar actionBar = getActionBar();
-		actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_custom_bg));
-		
+	protected void onCreate(Bundle saveInstanceState) {
+		super.onCreate(saveInstanceState);
+		setContentView(R.layout.activity_main);
+		setupActionBar();		
+
 		db = new DatabaseHelper(getApplicationContext());
 		
 		// Check preference 
@@ -48,12 +45,35 @@ public class MainActivity extends Activity {
 			db.createFolder(defaultFolder);
 			Log.e("Yeni Klasör: ", defaultFolder.getFolderName());
 			
-			// first_time = true yapýlarak ilk giriþ onaylanýr.
+			// first_time = false yapýlarak ilk giriþ onaylanýr.
 			Editor editor = pref.edit();
 			editor.putBoolean(IS_FIRST_TIME, false);
 			editor.commit();
 		}
+
+		Fragment foldersFragment = new FoldersFragment();
+		getSupportFragmentManager().beginTransaction()
+			.add(R.id.frame_container, foldersFragment).commit();
 		
+		
+		
+		/*
+		list.setOnItemClickListener(new OnItemClickListener() {
+
+		      @Override
+		      public void onItemClick(AdapterView<?> parent, final View view,
+		          int position, long id) {
+		    	  
+		    	  Fragment notesFragment = new FoldersFragment();
+		    	  Bundle args = new Bundle();
+		    	  args.putString(FOLDER_NAME,
+		    			  ((CustomList)parent.getItemAtPosition(position)).getTitle());
+		    	  
+		    	  getSupportFragmentManager().beginTransaction()
+		    	  	.replace(R.layout.activity_custom_list, notesFragment).commit();
+		      }
+		});
+
 		List<Folder> folders = db.getAllFolders();
 		final List<CustomList> folderList = new ArrayList<CustomList>();
 		
@@ -77,8 +97,38 @@ public class MainActivity extends Activity {
 		    	  notesPage.putExtra(FOLDER_NAME, folderList.get(position).getText());
 		    	  startActivity(notesPage);
 		      }
-		});
+		});*/
 		
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		ListView list = (ListView) findViewById(R.id.list);
+		list.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, final View view, int position,
+					long id) {
+				Fragment notesFragment = new NotesFragment();
+				Bundle args = new Bundle();
+				args.putString(FOLDER_NAME, ((CustomList)parent
+						.getItemAtPosition(position)).getTitle());
+				notesFragment.setArguments(args);
+				FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+				
+				trans.replace(R.id.frame_container, notesFragment);
+				trans.addToBackStack(null);
+				trans.commit();
+				
+			}
+		});
+	}
+
+	private void setupActionBar() {
+
+		ActionBar actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(getResources()
+				.getDrawable(R.drawable.action_bar_custom_bg));
 	}
 
 	@Override

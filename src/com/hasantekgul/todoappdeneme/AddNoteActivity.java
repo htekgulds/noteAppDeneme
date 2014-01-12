@@ -1,20 +1,15 @@
 package com.hasantekgul.todoappdeneme;
-import java.util.List;
-
-import com.hasantekgul.todoappdeneme.R;
-import com.hasantekgul.todoappdeneme.helper.DatabaseHelper;
-import com.hasantekgul.todoappdeneme.model.Folder;
-import com.hasantekgul.todoappdeneme.model.Note;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
+
+import com.hasantekgul.todoappdeneme.helper.DatabaseHelper;
+import com.hasantekgul.todoappdeneme.model.Folder;
+import com.hasantekgul.todoappdeneme.model.Note;
 
 
 public class AddNoteActivity extends Activity {

@@ -4,7 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/mid_gray_bg" >
+    android:background="@color/mid_gray_bg">
+    
+    <TextView
+        android:id="@+id/main_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/dark_gray_text"
+        android:padding="10dp"
+        android:text="Main Title"
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/list"
@@ -12,6 +22,7 @@
         android:layout_height="wrap_content"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
+        android:padding="3dp"
         android:listSelector="@android:color/transparent" >
     </ListView>
 
