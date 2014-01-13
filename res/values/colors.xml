@@ -10,4 +10,5 @@
     <color name="black">#000000</color>
     <color name="dark_gray_text">#333333</color>
     <color name="mid_gray_text">#666666</color>
+    <color name="light_transparent_bg">#aaefefef</color>
 </resources>
